@@ -11,12 +11,21 @@ type SyncManager struct {
 	m  map[string]ModelI
 	ml *sync.RWMutex
 
-	pool *redis.Pool
+	pool RedisPoolI
 
 	offsetDay int
 }
 
 func NewSyncManager(p *redis.Pool, offsetday int) *SyncManager {
+	return &SyncManager{
+		m:         make(map[string]ModelI),
+		ml:        &sync.RWMutex{},
+		pool:      p,
+		offsetDay: 3,
+	}
+}
+
+func NewSyncManagerV2(p RedisPoolI, offsetday int) *SyncManager {
 	return &SyncManager{
 		m:         make(map[string]ModelI),
 		ml:        &sync.RWMutex{},
@@ -51,7 +60,7 @@ func (sm *SyncManager) Run() {
 	}
 }
 
-func (sm SyncManager) handleJob(p *redis.Pool, o ModelI) {
+func (sm SyncManager) handleJob(p RedisPoolI, o ModelI) {
 	if sm.offsetDay <= 0 {
 		sm.offsetDay = 1
 	}
@@ -64,7 +73,7 @@ func (sm SyncManager) handleJob(p *redis.Pool, o ModelI) {
 
 }
 
-func merge(p *redis.Pool, o ModelI, offsetDays int) error {
+func merge(p RedisPoolI, o ModelI, offsetDays int) error {
 	conn := p.Get()
 	defer conn.Close()
 

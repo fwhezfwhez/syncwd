@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func handle(p *redis.Pool, o ModelI) {
+func handle(p RedisPoolI, o ModelI) {
 	setkey := daySetKey(o, time.Now().AddDate(0, 0, -1))
 
 	Printf("开始执行 %s 同步计划\n", setkey)
@@ -29,7 +29,7 @@ L:
 // 当set里没有记录时，返回true,nil
 // 当set有记录，但是一次性可以执行玩，返回true,nil
 // 当set仍然有记录时, 返回false,nil
-func oneloop(p *redis.Pool, o ModelI, setkey string) (bool, error) {
+func oneloop(p RedisPoolI, o ModelI, setkey string) (bool, error) {
 	conn := p.Get()
 
 	defer conn.Close()

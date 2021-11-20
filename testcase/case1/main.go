@@ -5,7 +5,7 @@ import (
 	"github.com/fwhezfwhez/syncwd"
 	"github.com/fwhezfwhez/syncwd/testcase/case1/src"
 	"github.com/garyburd/redigo/redis"
-	 "gopkg.in/robfig/cron.v2"
+	"gopkg.in/robfig/cron.v2"
 	"time"
 )
 
@@ -21,7 +21,7 @@ func init() {
 }
 
 func main() {
-	//prepareData()
+	prepareData()
 	//
 
 	c := cron.New()
@@ -30,6 +30,7 @@ func main() {
 	})
 
 	c.Start()
+
 	select {}
 }
 
