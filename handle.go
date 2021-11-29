@@ -12,7 +12,7 @@ import (
 func handle(p *redis.Pool, o ModelI) {
 	setkey := daySetKey(o, time.Now().AddDate(0, 0, -1))
 
-    Printf("开始执行 %s 同步计划\n", setkey)
+	Printf("开始执行 %s 同步计划\n", setkey)
 
 L:
 	for {
@@ -91,7 +91,7 @@ func oneloop(p *redis.Pool, o ModelI, setkey string) (bool, error) {
 		}
 
 		m := instance.MethodByName("SyncToDB")
-		if !m.IsNil() {
+		if m.IsValid() {
 			m.Call(nil)
 			continue
 		}
