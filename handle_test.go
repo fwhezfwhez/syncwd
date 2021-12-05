@@ -9,7 +9,7 @@ type UserInfo struct {
 	UserName string `gorm:"column:user_name;default:"`
 }
 
-func (ui UserInfo) TableName() string {
+func (ui UserInfo) SourceTableName() string {
 	return "user_info"
 }
 func (ui UserInfo) RedisKey() string {

@@ -38,13 +38,13 @@ func (sm *SyncManager) Add(o ModelI) {
 
 	sm.ml.Lock()
 	defer sm.ml.Unlock()
-	_, exist := sm.m[o.TableName()]
+	_, exist := sm.m[o.SourceTableName()]
 	if exist {
-		Errorf("exists job for table name %s\n", o.TableName())
+		Errorf("exists job for table name %s\n", o.SourceTableName())
 		return
 	}
 
-	sm.m[o.TableName()] = o
+	sm.m[o.SourceTableName()] = o
 }
 
 func (sm *SyncManager) Run() {

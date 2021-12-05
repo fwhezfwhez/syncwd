@@ -45,9 +45,9 @@ func Update(o ModelI, conn redis.Conn) error {
 }
 
 func syncDailySetKey(o ModelI) string {
-	return fmt.Sprintf("syncwd:sync_daily:%s:%s", o.TableName(), time.Now().Format("2006-01-02"))
+	return fmt.Sprintf("syncwd:sync_daily:%s:%s", o.SourceTableName(), time.Now().Format("2006-01-02"))
 }
 
 func daySetKey(o ModelI, t time.Time) string {
-	return fmt.Sprintf("syncwd:sync_daily:%s:%s", o.TableName(), t.Format("2006-01-02"))
+	return fmt.Sprintf("syncwd:sync_daily:%s:%s", o.SourceTableName(), t.Format("2006-01-02"))
 }

@@ -2,6 +2,6 @@ package syncwd
 
 type ModelI interface {
 	RedisKey() string
-	TableName() string
+	SourceTableName() string
 	SyncToDB() error
 }
