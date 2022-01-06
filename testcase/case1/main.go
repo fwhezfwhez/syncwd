@@ -5,7 +5,6 @@ import (
 	"github.com/fwhezfwhez/syncwd"
 	"github.com/fwhezfwhez/syncwd/testcase/case1/src"
 	"github.com/garyburd/redigo/redis"
-	"gopkg.in/robfig/cron.v2"
 	"time"
 )
 
@@ -14,22 +13,24 @@ var sm *syncwd.SyncManager
 var p *redis.Pool
 
 func init() {
-	p = src.NewPool("localhost:6379", "", 0)
+	p = src.NewPool("49.234.137.226:6379", "echo123#qp", 0)
 
-	sm = syncwd.NewSyncManager(p, 5)
-	sm.Add(src.UserInfo{})
+	sm = syncwd.NewSyncManager(p, 2)
+	sm.Add(src.UserLevelProcess{})
 }
 
 func main() {
-	prepareData()
+//	prepareData()
 	//
 
-	c := cron.New()
-	c.AddFunc("0 0 3 * * ?", func() {
-		sm.Run()
-	})
+	//c := cron.New()
+	//c.AddFunc("0 0 3 * * ?", func() {
+	//	sm.Run()
+	//})
+	//
+	//c.Start()
 
-	c.Start()
+	sm.Run()
 
 	select {}
 }
