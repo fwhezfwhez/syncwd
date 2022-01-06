@@ -37,7 +37,7 @@ syncwd是一款redis异步落库框架。
 ```go
 type ModelI interface {
 	RedisKey() string            // 某个模型的rediskey
-	TableName() string           // 某个模型的表名
+	SourceTableName() string           // 定位到同步set的特征key。对分表的表来说，建议使用源表名。对定表来说，建议使用表名。
 	SyncToDB() error             // 执行更新进数据库的方法
 }
 ```

@@ -42,7 +42,7 @@ func oneloop(p RedisPoolI, o ModelI, setkey string) (bool, error) {
         return {total_num, rands,0};
     end
 
-    local rands = redis.call('spop', KEYS[1], 500);
+    local rands = redis.call('y', KEYS[1], 500);
     return {total_num, rands, total_num-500};
 `
 	raw, e := conn.Do("eval", script, 1, setkey)
@@ -72,6 +72,7 @@ func oneloop(p RedisPoolI, o ModelI, setkey string) (bool, error) {
 		if e != nil && e == redis.ErrNil {
 			continue
 		}
+		fmt.Printf("start sync %s \n",v)
 
 		if e != nil {
 			return false, errorx.Wrap(e)
