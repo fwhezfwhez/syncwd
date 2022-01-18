@@ -47,7 +47,15 @@ func oneloop(p RedisPoolI, o ModelI, setkey string) (bool, error) {
 `
 	raw, e := conn.Do("eval", script, 1, setkey)
 
-	rss := raw.([]interface{})
+	var rss []interface{}
+
+	switch v:=raw.(type) {
+	case redis.Error:
+		return false, errorx.NewFromStringf("recv err %s", v.Error())
+	case []interface{}:
+		rss = v
+	}
+
 
 	if e != nil {
 		return false, errorx.Wrap(e)
