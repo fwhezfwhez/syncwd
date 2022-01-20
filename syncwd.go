@@ -61,6 +61,9 @@ func Updates(os []ModelI, conn redis.Conn) error {
 	conn.Flush()
 	return nil
 }
+func ClearDaySet(o ModelI, conn redis.Conn, t time.Time) {
+	conn.Do("del", daySetKey(o, t))
+}
 
 func syncDailySetKey(o ModelI) string {
 	return fmt.Sprintf("syncwd:sync_daily:%s:%s", o.SourceTableName(), time.Now().Format("2006-01-02"))
