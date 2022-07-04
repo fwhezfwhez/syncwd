@@ -97,14 +97,21 @@ func merge(p RedisPoolI, o ModelI, offsetDays int) error {
 		return errorx.Wrap(e)
 	}
 
+	var recvnum int
+
 	for _, v := range args {
 		if v == latestKey {
 			continue
 		}
 		conn.Send("del", v)
+		recvnum ++
 	}
 
 	conn.Flush()
+
+	for i := 0; i < recvnum; i ++ {
+		conn.Receive()
+	}
 
 	return nil
 }

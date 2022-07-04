@@ -26,7 +26,7 @@ func (ui UserInfo) SyncToDB() error {
 func TestOneloop(t *testing.T) {
 	p := NewPool("localhost:6379", "", 0)
 
-	done, e := oneloop(p, UserInfo{}, "syncwd:sync_daily:user_info:2021-11-20")
+	done, e := oneloop(p, UserInfo{}, "syncwd:sync_daily:user_info:2021-11-20xxxx")
 	if e != nil {
 		panic(e)
 	}

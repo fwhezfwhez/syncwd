@@ -26,6 +26,13 @@ func (s Syncwd) Update(o ModelI, conn redis.Conn) error {
 
 	fmt.Printf("成功将数据 %s 写入 set %s \n", o.RedisKey(), syncDailySetKey(o))
 	conn.Flush()
+
+
+	conn.Receive()
+	conn.Receive()
+	conn.Receive()
+
+
 	return nil
 }
 
@@ -41,10 +48,18 @@ func Update(o ModelI, conn redis.Conn) error {
 
 	//fmt.Printf("成功将数据 %s 写入 set %s \n", o.RedisKey(), syncDailySetKey(o))
 	conn.Flush()
+
+	conn.Receive()
+	conn.Receive()
+	conn.Receive()
+
+
 	return nil
 }
 
 func Updates(os []ModelI, conn redis.Conn) error {
+
+	var recvnum int
 
 	for _, v := range os {
 		buf, e := json.Marshal(v)
@@ -55,10 +70,16 @@ func Updates(os []ModelI, conn redis.Conn) error {
 		conn.Send("setex", v.RedisKey(), 60*60*24*7, buf)
 		conn.Send("sadd", syncDailySetKey(v), v.RedisKey())
 		conn.Send("expire", syncDailySetKey(v), 7*60*60*24)
+
+		recvnum += 3
 	}
 
 	//fmt.Printf("成功将数据 %s 写入 set %s \n", o.RedisKey(), syncDailySetKey(o))
 	conn.Flush()
+
+	for i := 0; i < recvnum; i++ {
+		conn.Receive()
+	}
 	return nil
 }
 func ClearDaySet(o ModelI, conn redis.Conn, t time.Time) {

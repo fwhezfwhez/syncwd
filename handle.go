@@ -36,6 +36,11 @@ func oneloop(p RedisPoolI, o ModelI, setkey string) (bool, error) {
 
 	var script = `
     local total_num = redis.call('scard',KEYS[1]);
+    
+    if total_num == 0 then
+       return {0,0,0}
+    end
+     
     if total_num <= 500 then
         -- 500个以内，直接全部返回
         local rands = redis.call('spop', KEYS[1], total_num);
@@ -49,13 +54,14 @@ func oneloop(p RedisPoolI, o ModelI, setkey string) (bool, error) {
 
 	var rss []interface{}
 
-	switch v:=raw.(type) {
+	switch v := raw.(type) {
 	case redis.Error:
 		return false, errorx.NewFromStringf("recv err %s", v.Error())
 	case []interface{}:
 		rss = v
 	}
 
+	// fmt.Println(rss)
 
 	if e != nil {
 		return false, errorx.Wrap(e)
@@ -80,7 +86,7 @@ func oneloop(p RedisPoolI, o ModelI, setkey string) (bool, error) {
 		if e != nil && e == redis.ErrNil {
 			continue
 		}
-		fmt.Printf("start sync %s \n",v)
+		fmt.Printf("start sync %s \n", v)
 
 		if e != nil {
 			return false, errorx.Wrap(e)
